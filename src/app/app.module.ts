@@ -9,6 +9,23 @@ import { BookListComponent } from './book-list/book-list.component';
 import { SingleListComponent } from './book-list/single-list/single-list.component';
 import { BookFormComponent } from './book-list/book-form/book-form.component';
 import { HeaderComponent } from './header/header.component';
+import { AuthService } from './services/auth.service';
+import { AuthGuardService } from './services/auth-guard.service';
+import { BooksService } from './services/books.service';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { Routes, RouterModule } from '@angular/router';
+
+
+const appRoutes: Routes = [
+  { path: 'auth/signup', component: SignupComponent },
+  { path: 'auth/signin', component: SigninComponent },
+  { path : 'books', canActivate:[AuthGuardService] ,component: BookListComponent },
+  { path: 'books/new',canActivate:[AuthGuardService] , component: BookFormComponent },
+  { path: 'books/view/:id',canActivate:[AuthGuardService] , component: SingleListComponent },
+  { path:'', redirectTo: 'books',pathMatch:'full' },
+  { path:'**', redirectTo: 'books' }
+]
 
 @NgModule({
   declarations: [
@@ -22,9 +39,17 @@ import { HeaderComponent } from './header/header.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    RouterModule.forRoot(appRoutes)
   ],
-  providers: [],
+  providers: [
+    AuthService,
+    AuthGuardService,
+    BooksService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
