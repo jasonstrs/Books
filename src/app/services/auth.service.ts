@@ -6,6 +6,8 @@ import * as firebase from 'firebase';
 })
 export class AuthService {
 
+  uid:string;
+
   constructor() { }
 
   createNewUser(email: string, password: string){
@@ -27,7 +29,7 @@ export class AuthService {
     return new Promise(
       (resolve,reject) => {
         firebase.auth().signInWithEmailAndPassword(email,password).then(
-          ()=>{ // la connexion fonctionne
+          (resultat)=>{ // la connexion fonctionne
             resolve();
           },
           (error) => { // fonctionne pas

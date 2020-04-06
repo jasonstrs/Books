@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Book } from '../models/Book.model';
 import { Subject } from 'rxjs';
 import * as firebase from 'firebase';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,18 +12,18 @@ export class BooksService {
   books: Book[]=[];
   booksSubject = new Subject<Book[]>();
 
-  constructor() { }
+  constructor(private auth: AuthService) { }
 
   emitBooks(){
     this.booksSubject.next(this.books);
   }
 
   saveBooks(){
-    firebase.database().ref('/books').set(this.books);
+    firebase.database().ref('/books/'+this.auth.uid).set(this.books);
   }
 
   getBooks(){
-    firebase.database().ref('/books').on('value',(data)=>{
+    firebase.database().ref('/books/'+this.auth.uid + '/').on('value',(data)=>{
       this.books = data.val() ? data.val() : [];
       this.emitBooks();
     });
@@ -31,7 +32,7 @@ export class BooksService {
   getSingleBooks(id:number){
     return new Promise(
       (resolve,reject)=> {
-        firebase.database().ref('/books/'+ id).once('value').then(
+        firebase.database().ref('/books/'+ this.auth.uid +'/' + id).once('value').then(
           (data)=>{
             resolve(data.val());
           },

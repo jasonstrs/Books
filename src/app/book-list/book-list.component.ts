@@ -3,6 +3,8 @@ import { Book } from '../models/Book.model';
 import { Subscription } from 'rxjs';
 import { BooksService } from '../services/books.service';
 import { Router } from '@angular/router';
+import * as firebase from 'firebase';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-book-list',
@@ -15,17 +17,22 @@ export class BookListComponent implements OnInit, OnDestroy {
   booksSubscription: Subscription;
 
 
-  constructor(private booksService: BooksService,private router: Router) { }
+  constructor(private booksService: BooksService,private router: Router,private auth:AuthService) { }
   
 
   ngOnInit(): void {
+    var user = firebase.auth().currentUser;
+    if (user) { // si l'utilisateur est connecte on stocke son uid
+      this.auth.uid=user.uid;
+    }
+    this.booksService.books=[]; // on vide le tableau qui contient les livres
+
     this.booksSubscription=this.booksService.booksSubject.subscribe(
       (books: Book[]) => {
         this.books = books;
       }
     );
     this.booksService.getBooks();
-    this.booksService.emitBooks();
   }
 
   ngOnDestroy(): void {

@@ -12,12 +12,10 @@ import { Book } from 'src/app/models/Book.model';
 export class BookFormComponent implements OnInit {
 
   bookForm: FormGroup;
-  /*fileIsUploading = false;
-  fileUrl:string;
-  fileUploaded = false;*/
+  
   fileIsUploading = false;
-fileUrl: string;
-fileUploaded = false;
+  fileUrl: string;
+  fileUploaded = false;
 
   constructor(private formBuilder: FormBuilder,
             private booksService: BooksService,
@@ -40,6 +38,7 @@ fileUploaded = false;
   onSaveBook(){
     const title = this.bookForm.get('title').value;
     const author = this.bookForm.get('author').value;
+    // const uid = this.auth.uid; dangereux de le stocker !
     const newBook = new Book(title,author);
     if (this.fileUrl && this.fileUrl !==''){
       newBook.photo=this.fileUrl;
