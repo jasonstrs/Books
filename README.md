@@ -3,7 +3,7 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.3.
 
 ## use your firebase
-You have to change 'app.module.ts' and put your config firebase
+You have to change 'app.module.ts' and put your firebase config
 
 ## Development server
 
